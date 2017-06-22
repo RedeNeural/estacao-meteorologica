@@ -99,3 +99,10 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# SQlite
+*.sqlite3
+
+# Sublime text
+*.sublime-project
+*.sublime-workspace
