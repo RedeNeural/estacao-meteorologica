@@ -1,3 +1,11 @@
+# -*- coding:utf-8 -*-
+
 from django.contrib import admin
 
-# Register your models here.
+from estacaometeorologica.core.models import EstacaoMeteorologica
+
+
+@admin.register(EstacaoMeteorologica)
+class EstacaoMeteorologicaAdmin(admin.ModelAdmin):
+
+    pass
