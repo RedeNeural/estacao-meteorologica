@@ -1,1 +1,1 @@
-web: gunicorn casaclara.wsgi --log-file -
+web: gunicorn estacaometeorologica.wsgi --log-file -
