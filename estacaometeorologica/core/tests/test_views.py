@@ -29,8 +29,6 @@ class EstacaoMeteorologicaViewTestCase(TestCase):
 
     @vcr.use_cassette(settings.BASE_DIR + '/estacaometeorologica/core/tests/cassettes/morangos.yaml')
     def test_get(self):
-        EstacaoMeteorologica.objects.update_data()
-
         response = self.client.get(reverse_lazy('estacao-meteorologica'), HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
         content = response.json()
