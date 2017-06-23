@@ -7,6 +7,8 @@ from datetime import datetime
 from django.db import models
 from django.utils import timezone
 
+from estacaometeorologica.core.api_morangos import get_data
+
 
 def format_strptime_datetime(dt):
     try:
@@ -19,12 +21,14 @@ def format_strptime_datetime(dt):
     return dt
 
 def format_strftime_datetime(dt):
-    return dt.strftime('%Y-%m-%dT%H:%M:%S')
+    return dt.strftime('%d/%m/%Y %H:%M')
 
 
 class EstacaoMeteorologicaManager(models.Manager):
 
-    def update_data(self, data):
+    def update_data(self):
+        data = get_data()
+
         for info in data:
             identifier = info.get('Id')
 
@@ -37,17 +41,18 @@ class EstacaoMeteorologicaManager(models.Manager):
                 )
 
     def get_json(self):
-        object_list = []
+        context = {}
+
+        context['temperature'] = []
+        context['humidity'] = []
+        context['date'] = []
 
         for obj in self.all():
-            object_list.append({
-                'identifier': obj.identifier,
-                'temperature': obj.temperature,
-                'humidity': obj.humidity,
-                'date': format_strftime_datetime(obj.date),
-            })
+            context['temperature'].append(float(obj.temperature))
+            context['humidity'].append(float(obj.humidity))
+            context['date'].append(format_strftime_datetime(obj.date))
 
-        return object_list
+        return context
 
 
 class EstacaoMeteorologica(models.Model):
