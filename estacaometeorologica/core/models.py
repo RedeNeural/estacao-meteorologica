@@ -26,15 +26,14 @@ class EstacaoMeteorologicaManager(models.Manager):
 
     def update_data(self, data):
         for info in data:
-            identifier = info.get('Id')
+            print(info)
+            obj = self.update_or_create(identifier=info.get('Id'))
 
-            if not self.filter(identifier=identifier).exists():
-                self.create(
-                    identifier=identifier,
-                    temperature=info.get('temp'),
-                    humidity=info.get('hum'),
-                    date=format_strptime_datetime(info.get('dt'))
-                )
+            obj.temperature = info.get('temp')
+            obj.humidity = info.get('hum')
+            obj.date = format_strptime_datetime(info.get('dt'))
+
+            obj.save()
 
     def get_json(self):
         object_list = []
@@ -57,9 +56,9 @@ class EstacaoMeteorologica(models.Model):
         verbose_name_plural = 'Estação Meteorológica'
 
     identifier = models.PositiveIntegerField()
-    temperature = models.DecimalField(max_digits=5, decimal_places=2)
-    humidity = models.DecimalField(max_digits=5, decimal_places=2)
-    date = models.DateTimeField()
+    temperature = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    humidity = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    date = models.DateTimeField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
