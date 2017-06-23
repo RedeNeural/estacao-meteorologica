@@ -20,4 +20,6 @@ class IndexViewTestCase(TestCase):
 
         response = self.client.get(reverse_lazy('index'))
 
-        self.assertTrue(response.context_data.get('data'))
+        self.assertTrue(response.context_data.get('temperature'))
+        self.assertTrue(response.context_data.get('humidity'))
+        self.assertTrue(response.context_data.get('date'))

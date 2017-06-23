@@ -13,6 +13,12 @@ class IndexView(TemplateView):
 
     def get_context_data(self):
         context = super(IndexView, self).get_context_data()
-        context['data'] = EstacaoMeteorologica.objects.get_json()
+        context['temperature'] = []
+        context['humidity'] = []
+        context['date'] = []
+        for data in EstacaoMeteorologica.objects.get_json():
+            context['temperature'].append(float(data['temperature']))
+            context['humidity'].append(float(data['humidity']))
+            context['date'].append(data['date'])
 
         return context
