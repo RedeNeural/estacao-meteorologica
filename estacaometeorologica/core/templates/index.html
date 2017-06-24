@@ -76,9 +76,10 @@
 
 		function updateChart(){
 			$.getJSON("/estacao-meteorologica", function( data ) {
-				lineChart.data.labels = data.date
-				lineChart.data.datasets[0].data = data.temperature
-				lineChart.data.datasets[1].data = data.humidity
+				lineChart.data.labels = data.date;
+				lineChart.data.datasets[0].data = data.temperature;
+				lineChart.data.datasets[1].data = data.humidity;
+				lineChart.config.options.animation = false;
 				lineChart.update();
 			})
 		}
