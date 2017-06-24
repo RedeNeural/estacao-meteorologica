@@ -17,8 +17,12 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from estacaometeorologica.core.views import IndexView
+from estacaometeorologica.core.views import EstacaoMeteorologicaView
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^estacao-meteorologica$', EstacaoMeteorologicaView.as_view(), name='estacao-meteorologica'),
     url(r'^$', IndexView.as_view(), name='index'),
+
 ]

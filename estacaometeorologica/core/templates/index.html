@@ -6,71 +6,90 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Rede Neural</title>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"
+					integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=">
+	</script>
 </head>
 <body>
-  <div style="width:80%; margin:50px 10%">
-      <canvas id="canvas" width="1005" height="502"
-              style="display: block; width: 1005px; height: 502px;">
-      </canvas>
-  </div>
-  <script>
-    dates = {{date | safe}};
+	<div id="content">
+	  <div style="width:80%; margin:50px 10%">
+	      <canvas id="canvas" width="1005" height="502"
+	              style="display: block; width: 1005px; height: 502px;">
+	      </canvas>
+	  </div>
+	</div>
+	<script>
+		dates = {{date | safe}};
 		umi = {{humidity | safe}};
 		temp = {{temperature | safe}};
 
-    var config = {
-      type: 'line',
-      data: {
-        labels: dates,
-        datasets: [{
-          label: "Temperatura (°C) ",
-          backgroundColor: 'rgba(255, 25, 117, 0.8)',
-          borderColor: 'rgba(255, 25, 117, 0.8)',
-          data: temp,
-          fill: false,
-          pointRadius: 1,
-        }, {
-          label: "Umidade (%) ",
-          backgroundColor: 'rgba(0, 210, 255, 0.8)',
-          borderColor: 'rgba(0, 210, 255, 0.8)',
-          data: umi,
+		var config = {
+			type: 'line',
+			data: {
+				labels: dates,
+				datasets: [{
+					label: "Temperatura (°C) ",
+					backgroundColor: 'rgba(255, 25, 117, 0.8)',
+					borderColor: 'rgba(255, 25, 117, 0.8)',
+					data: temp,
 					fill: false,
 					pointRadius: 1,
-        }]
-      },
-      options: {
-        responsive: true,
-        title:{
-          display:true,
-          text:'Histórico de Temperatura x Umidade'
-        },
-        tooltips: {
-          mode: 'index',
-          intersect: false,
-        },
-        hover: {
-          mode: 'nearest',
-          intersect: true
-        },
-        scales: {
-          xAxes: [{
+				}, {
+					label: "Umidade (%) ",
+					backgroundColor: 'rgba(0, 210, 255, 0.8)',
+					borderColor: 'rgba(0, 210, 255, 0.8)',
+					data: umi,
+					fill: false,
+					pointRadius: 1,
+				}]
+			},
+			options: {
+				responsive: true,
+				title:{
+					display:true,
+					text:'Histórico de Temperatura x Umidade'
+				},
+				tooltips: {
+					mode: 'index',
+					intersect: false,
+				},
+				hover: {
+					mode: 'nearest',
+					intersect: true
+				},
+				scales: {
+					xAxes: [{
 						display: true,
 						ticks: {
-		        maxRotation: 0, // angle in degrees
+						maxRotation: 0, // angle in degrees
 						autoSkipPadding: 20, // px
-			      }
-          }],
-          yAxes: [{
-            display: true,
-          }]
-        }
-      }
-    };
+						}
+					}],
+					yAxes: [{
+						display: true,
+					}]
+				}
+			}
+		};
+	</script>
+	<script>
 
-    window.onload = function() {
-      var ctx = document.getElementById("canvas").getContext("2d");
-      window.myLine = new Chart(ctx, config);
-    };
-  </script>
+		function updateChart(){
+			$.getJSON("/estacao-meteorologica", function( data ) {
+				lineChart.data.labels = data.date;
+				lineChart.data.datasets[0].data = data.temperature;
+				lineChart.data.datasets[1].data = data.humidity;
+				lineChart.config.options.animation = false;
+				lineChart.update();
+			})
+		}
+
+		setInterval(updateChart, 60000);
+
+		window.onload = function() {
+			var ctx = document.getElementById("canvas").getContext("2d");
+			lineChart = new Chart(ctx, config);
+		};
+	</script>
 </body>
 </html>
